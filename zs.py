@@ -3,19 +3,23 @@ from bs4 import BeautifulSoup
 import re
 import sendMail
 import WorkInTime
+import time
 from datetime import datetime
 
 class xs:
     def __init__(self):
         self.__new = ''
+
     def update(self, name):
         self.__new = name
+
     def isNew(self, name):
         return self.__new != name
+
     def newCharp(self):
         return self.__new
 
-def checkToday():  #
+def checkToday(timeWork):  #
     login_seesion = requests.Session()
     url = 'http://www.sodu888.com'
     f = login_seesion.get(url+'/book/2705.html')
@@ -26,7 +30,6 @@ def checkToday():  #
     #print(checkReaded)
     charpName = ''
     links = url+'/book/2705.html\n'
-    i = 0
     #print(soup.body.table)
     newFlag = False
     for td in soup.findAll(attrs={"class": "time"}):
@@ -42,15 +45,17 @@ def checkToday():  #
         for charp in soup.findAll(rel=re.compile(r'nofollow')):
             if numOneCharp:
                 numOneCharp = False
-                if gzr.isNew(charp.text):
+                if gzr.isNew(charp.text):   #找到更新章节名字
                     gzr.update(charp.text)
                 else:   #跟新过了
                     break
+
             if not gzr.isNew(charp.text):   #最新章节
                 links += url+charp['href']+'\n'
                 pass
             else:                           #到了旧章节
                 sendMail.sendMail(gzr.newCharp(), links)
+                timeWork.changeRelaxTime(60*30) #跟新一章节后，半小时查看一次
                 print(gzr.newCharp())
                 print(links)
                 break
@@ -58,8 +63,8 @@ def checkToday():  #
 
 print("蛊真人正在运行")
 gzr = xs()
+timeB = [['19:46', '23:00']]
+timeWork = WorkInTime.WorkInTime(timeB, 64, 0)
 while True:
-    timeB = [['20:00', '23:30']]
-    timeWork = WorkInTime.WorkInTime(timeB)
     timeWork.relax()
-    checkToday()
+    checkToday(timeWork)
