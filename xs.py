@@ -1,6 +1,5 @@
 from lxml import etree
 import requests
-import calendar
 import sendMail
 import time
 import datetime
@@ -11,7 +10,7 @@ class xs:
     def __init__(self, name, url, timeB):
         self.name = name
         self.__url = url
-        self.__getContent = getContent.saveToFile()
+        self.__getContent = getContent.saveToFile('xs')
         self.zjUrlHead = 'http://www.sodu888.com'
         self.timeB = timeB
         self.timeB.append(['23:59'] * 2)
@@ -34,9 +33,12 @@ class xs:
         self.wk.relax()
 
     def checkToday(self):
-        url = self.getUrl()
-        html = requests.get(url)
-        selector = etree.HTML(html.text)
+        try:
+            url = self.getUrl()
+            html = requests.get(url)
+            selector = etree.HTML(html.text)
+        except:
+            return
         # print(html.text)
         newFlag = False
         gxsj = selector.xpath('//td[@class="time"]/text()')
@@ -69,8 +71,8 @@ class xs:
                             # print(div.xpath('//text()'))
                             for eachP in (div.xpath('./text()')):
                                 text += eachP + '\r\n'
-                                pass
+
                     # print(text)
-                    if text != '':
+                    if len(text) > 89:
                         self.save(zjName, text)
                         self.sendToKindle(zjName)

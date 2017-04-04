@@ -21,10 +21,18 @@ def followBook(ith):
         xss[ith].checkToday()
         xss[ith].relax()
 
+
 if __name__ == '__main__':
     for i in range(len(xss)):
         p = Process(target=followBook, args=(i,))
         p.start()
+'''
+
+txt = open('D:/xs/蛊真人 请假一天.txt', encoding='utf-8')
+all_the_text = txt.read( )
+print(len(all_the_text))
+print('end')
+'''
 
 '''
 while True:
