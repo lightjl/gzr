@@ -53,9 +53,10 @@ class xs:
                 zjName = (zj.xpath('./text()')[0])
                 # print(zjName)
                 zjGxsj = (zj.xpath('../../td[2]/text()')[0])
-                # print(zjGxsj[-2:])
+                # 更新时间
                 if int(zjGxsj[-2:]) != datetime.datetime.now().day:
                     break
+
                 zjHref = self.zjUrlHead + (zj.xpath('./@href')[0])
                 # print(zjHref)
                 if not (self.isSave(zjName)):
