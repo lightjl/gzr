@@ -39,7 +39,7 @@ class xs:
             selector = etree.HTML(html.text)
         except:
             return
-        # print(html.text)
+        #print(html.text)
         newFlag = False
         gxsj = selector.xpath('//td[@class="time"]/text()')
 
@@ -60,7 +60,11 @@ class xs:
                 zjHref = self.zjUrlHead + (zj.xpath('./@href')[0])
                 # print(zjHref)
                 if not (self.isSave(zjName)):
-                    html = requests.get(zjHref)
+
+                    try:
+                        html = requests.get(zjHref)
+                    except:
+                        continue
                     html.encoding = 'utf-8'
                     selector = etree.HTML(html.content)
 
