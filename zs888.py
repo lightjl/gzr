@@ -9,9 +9,12 @@ INTERPRETER = "C:/Users/Administrator/AppData/Local/Programs/Python/Python36-32/
 
 #timeB = [['19:46', '23:00']]
 
-xss = [xs.xs('刀镇星河', 'http://www.sodu888.com/book/288771.html', [['8:00', '8:30'], ['12:00', '12:30'], ['17:00', '17:30']]),
+xss = [xs.xs('刀镇星河', 'http://www.sodu888.com/book/288771.html', [['10:30', '11:30'], ['12:00', '12:30'], ['17:00', '17:30']]),
+       #xs.xs('刀镇星河', 'https://www.sodu.net/mulu_141978.html', [['9:10', '9:32'], ['11:54', '12:22'], ['16:54', '17:22']]),
+       #xs.xs('极道天魔', 'http://www.soduso.com/mulu_3714707.html', [['16:36', '17:26']]),   #
        xs.xs('极道天魔', 'http://www.sodu888.com/book/295430.html', [['16:46', '17:30']]),   #
-       xs.xs('蛊真人', 'http://www.sodu888.com/book/2705.html',[['19:46', '23:00']])
+       xs.xs('蛊真人', 'http://www.sodu888.com/book/2705.html',[['19:46', '23:00']]),   #
+       #xs.xs('蛊真人', 'http://www.soduso.com/mulu_3469590.html',[['20:09', '23:00']])
        ]
 #checkToday888(jdtm)
 
