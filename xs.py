@@ -15,7 +15,7 @@ class xs:
         self.timeB = timeB
         self.timeB.append(['23:59'] * 2)
         #print(self.timeB)
-        self.wk = WorkInTime.WorkInTime(self.timeB, 60 * 10, 0)  # 休息10分钟
+        self.wk = WorkInTime.WorkInTime(self.timeB, 60 * 10, 11)  # 休息10分钟
 
     def getUrl(self):
         return self.__url
@@ -27,7 +27,10 @@ class xs:
         self.__getContent.save(filename, text)
 
     def sendToKindle(self, filename):
-        sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
+        sendMail.sendMail(filename, filename)
+        if '第' in filename:
+            #print("更新了")
+            sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
 
     def relax(self):
         self.wk.relax()
@@ -43,12 +46,19 @@ class xs:
         newFlag = False
         gxsj = selector.xpath('//td[@class="time"]/text()')
 
+        if (len(gxsj) == 0):
+            return
+
         if int(gxsj[0][-2:]) == datetime.datetime.now().day:  # 更新了
             newFlag = True
 
+        #zjs = selector.xpath('//a[@rel="nofollow"]/text()')
+        #print(zjs)
+
+
         if newFlag:
             zjs = selector.xpath('//a[@rel="nofollow"]')
-            # print(zjs)
+            #print(zjs)
             for zj in zjs:
                 zjName = (zj.xpath('./text()')[0])
                 # print(zjName)
