@@ -1,6 +1,7 @@
 from lxml import etree
 import requests
 import sendMail
+import recMail
 import time
 import datetime
 import getContent
@@ -16,6 +17,7 @@ class xs:
         self.timeB.append(['23:59'] * 2)
         #print(self.timeB)
         self.wk = WorkInTime.WorkInTime(self.timeB, 60 * 10, 11)  # 休息10分钟
+        self.sendedList = []
 
     def getUrl(self):
         return self.__url
@@ -28,6 +30,7 @@ class xs:
 
     def sendToKindle(self, filename):
         sendMail.sendMail(filename, filename)
+        self.sendedList.append(filename)  # 送出后更新
         if '第' in filename:
             #print("更新了")
             sendMail.send_attachment_kd(self.__getContent.sub_folder, filename)
@@ -36,6 +39,7 @@ class xs:
         self.wk.relax()
 
     def checkToday(self):
+        self.sendedList = recMail.checkMailList(30)  # 30 days
         try:
             url = self.getUrl()
             html = requests.get(url)
@@ -60,7 +64,7 @@ class xs:
 
             zjHref = self.zjUrlHead + (zj.xpath('./@href')[0])
             # print(zjHref)
-            if not (self.isSave(zjName)):
+            if zjName not in self.sendedList:
                 try:
                     html = requests.get(zjHref)
                 except:
