@@ -21,7 +21,7 @@ class xs:
         return self.__url
 
     def isSave(self, filename):
-        return self.__getContent.isDownloaded(filename)
+        return self.__getContent.isSended(filename)
 
     def save(self, filename, text):
         self.__getContent.save(filename, text)
@@ -43,51 +43,41 @@ class xs:
         except:
             return
         #print(html.text)
-        newFlag = False
         gxsj = selector.xpath('//td[@class="time"]/text()')
 
         if (len(gxsj) == 0):
             return
 
-        if int(gxsj[0][-2:]) == datetime.datetime.now().day:  # 更新了
-            newFlag = True
-
         #zjs = selector.xpath('//a[@rel="nofollow"]/text()')
         #print(zjs)
 
 
-        if newFlag:
-            zjs = selector.xpath('//a[@rel="nofollow"]')
-            #print(zjs)
-            for zj in zjs:
-                zjName = (zj.xpath('./text()')[0])
-                # print(zjName)
-                zjGxsj = (zj.xpath('../../td[2]/text()')[0])
-                # 更新时间
-                if int(zjGxsj[-2:]) != datetime.datetime.now().day:
-                    break
+        zjs = selector.xpath('//a[@rel="nofollow"]')
+        #print(zjs)
+        for zj in zjs:
+            zjName = (zj.xpath('./text()')[0])
+            # print(zjName)
 
-                zjHref = self.zjUrlHead + (zj.xpath('./@href')[0])
-                # print(zjHref)
-                if not (self.isSave(zjName)):
+            zjHref = self.zjUrlHead + (zj.xpath('./@href')[0])
+            # print(zjHref)
+            if not (self.isSave(zjName)):
+                try:
+                    html = requests.get(zjHref)
+                except:
+                    continue
+                html.encoding = 'utf-8'
+                selector = etree.HTML(html.content)
 
-                    try:
-                        html = requests.get(zjHref)
-                    except:
-                        continue
-                    html.encoding = 'utf-8'
-                    selector = etree.HTML(html.content)
+                divs = (selector.xpath('//div[@id]'))
+                text = ''
+                for div in divs:
+                    id = (div.xpath('@id'))[0]
+                    if id == 'content' or id == 'contents' or id == 'txtContent':
+                        # print(div.xpath('//text()'))
+                        for eachP in (div.xpath('./text()')):
+                            text += eachP + '\r\n'
 
-                    divs = (selector.xpath('//div[@id]'))
-                    text = ''
-                    for div in divs:
-                        id = (div.xpath('@id'))[0]
-                        if id == 'content' or id == 'contents' or id == 'txtContent':
-                            # print(div.xpath('//text()'))
-                            for eachP in (div.xpath('./text()')):
-                                text += eachP + '\r\n'
-
-                    # print(text)
-                    if len(text) > 89:
-                        self.save(zjName, text)
-                        self.sendToKindle(zjName)
+                # print(text)
+                if len(text) > 89:
+                    self.save(zjName, text)
+                    self.sendToKindle(zjName)

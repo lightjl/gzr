@@ -4,9 +4,6 @@ import logging
 from multiprocessing import Process
 INTERPRETER = "C:/Users/Administrator/AppData/Local/Programs/Python/Python36-32/python.exe"
 
-#import chardet
-
-
 #timeB = [['19:46', '23:00']]
 
 xss = [xs.xs('刀镇星河', 'http://www.sodu888.com/book/288771.html', [['10:30', '11:30'], ['12:00', '12:30'], ['17:00', '17:30']]),
